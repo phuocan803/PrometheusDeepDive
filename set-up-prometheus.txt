@@ -1,0 +1,38 @@
+#set up
+
+# 1. Tải Prometheus v3.3.1
+wget https://github.com/prometheus/prometheus/releases/download/v3.3.1/prometheus-3.3.1.linux-amd64.tar.gz
+
+# 2. Giải nén tệp đã tải
+tar xzf prometheus-3.3.1.linux-amd64.tar.gz
+
+# 3. Di chuyển các tệp nhị phân vào /usr/local/bin
+sudo cp prometheus-3.3.1.linux-amd64/{prometheus,promtool} /usr/local/bin/
+
+# 4. Tạo thư mục cấu hình và dữ liệu
+sudo mkdir -p /etc/prometheus /var/lib/prometheus
+
+# 5. Di chuyển các tệp cấu hình và thư viện giao diện
+sudo cp -r prometheus-3.3.1.linux-amd64/{consoles,console_libraries} /etc/prometheus/
+sudo cp prometheus-3.3.1.linux-amd64/prometheus.yml /etc/prometheus/prometheus.yml
+
+# 6. Tạo người dùng 'prometheus' không có quyền đăng nhập
+sudo useradd -M -r -s /bin/false prometheus
+
+# 7. Thiết lập quyền sở hữu cho người dùng 'prometheus'
+sudo chown prometheus:prometheus /usr/local/bin/{prometheus,promtool}
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown prometheus:prometheus /var/lib/prometheus
+
+//# Nếu chưa copy prometheus.yml, hãy copy
+sudo cp prometheus-3.3.1.linux-amd64/prometheus.yml /etc/prometheus/prometheus.yml
+
+//# Thiết lập lại quyền sở hữu
+sudo useradd -M -r -s /bin/false prometheus
+sudo chown prometheus:prometheus /usr/local/bin/{prometheus,promtool}
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown prometheus:prometheus /var/lib/prometheus
+
+# Chạy Prometheus thử bằng:
+prometheus --config.file=/etc/prometheus/prometheus.yml
+http://localhost:9090
