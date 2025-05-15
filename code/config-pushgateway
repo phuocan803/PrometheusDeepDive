@@ -1,0 +1,27 @@
+
+#Log in to your Prometheus/Pushgateway server.
+#Make a curl request to send some metrics to the Pushgateway API
+
+echo "value_of_pi 3.14" | curl --data-binary @- http://localhost:9091/metrics/job/my_job
+
+curl localhost:9091/metrics
+
+cat << EOF | curl --data-binary @- http://localhost:9091/metrics/job
+/my_job/instance/my_instance
+# TYPE temperature gauge
+temperature{location="room1"} 31
+temperature{location="room2"} 33
+# TYPE my_metric gauge
+# HELP my_metric An example.
+my_metric 5
+EOF
+
+curl localhost:9091/metrics
+
+#Look for your newly pushed metrics in Prometheus using the expression browser (http://<PROMETHEUS_SERVER_PUBLIC_IP>:9090). Run some queries to locate your data
+
+value_of_pi
+temperature
+my_metric
+
+
