@@ -40,7 +40,7 @@ http://localhost:9090
 
 Note: 
 Bản Prometheus 3.3.1 không còn chứa các thư mục consoles và console_libraries. 
-Đây là thay đổi mới từ bản 3.x (bản chưa phát hành chính thức, chưa stable). 
+Đây là thay đổi mới từ bản 3.x ( bản chưa phát hành chính thức, chưa stable). 
 Những thành phần này đã bị loại bỏ hoặc tách riêng.
 
 
