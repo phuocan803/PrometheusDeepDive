@@ -1,0 +1,56 @@
+#config prometheus
+#!/bin/bash
+
+# Mở file cấu hình để chỉnh sửa thủ công
+sudo vi /etc/prometheus/prometheus.yml
+
+# Gửi tín hiệu reload nếu Prometheus đang chạy dưới dạng process
+sudo killall -HUP prometheus
+
+# (Tùy chọn) Khởi động lại Prometheus nếu cần đảm bảo reload
+sudo systemctl restart prometheus
+
+# Kiểm tra cấu hình đã áp dụng thành công chưa
+curl -s localhost:9090/api/v1/status/config | grep scrape_interval
+
+#error
+//ps aux | grep prometheus
+//sudo systemctl start prometheus
+
+sudo nano /etc/systemd/system/prometheus.service
+//
+[Unit]
+Description=Prometheus
+After=network.target
+
+[Service]
+User=prometheus
+ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+//
+Ctrl+X+Y+ENTER
+
+#fix error
+sudo systemctl daemon-reload
+sudo systemctl start prometheus
+sudo systemctl enable prometheus
+#fix error
+sudo mkdir -p /data
+sudo chown -R prometheus:prometheus /data
+sudo chmod -R 755 /data
+sudo systemctl restart prometheus
+
+#bash
+sudo apt install curl
+
+#sau khi config Exporter
+sudo nano /etc/prometheus/prometheus.yml
+
+  - job_name: 'Linux Server'
+    static_configs:
+      - targets: ['192.168.60.136:9100']
+
+sudo killall -HUP prometheus

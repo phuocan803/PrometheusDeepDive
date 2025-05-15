@@ -36,3 +36,37 @@ sudo chown prometheus:prometheus /var/lib/prometheus
 # Chạy Prometheus thử bằng:
 prometheus --config.file=/etc/prometheus/prometheus.yml
 http://localhost:9090
+
+
+Note: 
+Bản Prometheus 3.3.1 không còn chứa các thư mục consoles và console_libraries. 
+Đây là thay đổi mới từ bản 3.x (bản chưa phát hành chính thức, chưa stable). 
+Những thành phần này đã bị loại bỏ hoặc tách riêng.
+
+
+# 1. Tải Prometheus v2.52.0
+wget https://github.com/prometheus/prometheus/releases/download/v2.52.0/prometheus-2.52.0.linux-amd64.tar.gz
+
+# 2. Giải nén
+tar xzf prometheus-2.52.0.linux-amd64.tar.gz
+
+# 3. Di chuyển nhị phân
+sudo cp prometheus-2.52.0.linux-amd64/{prometheus,promtool} /usr/local/bin/
+
+# 4. Tạo thư mục
+sudo mkdir -p /etc/prometheus /var/lib/prometheus
+
+# 5. Di chuyển cấu hình và giao diện
+sudo cp -r prometheus-2.52.0.linux-amd64/{consoles,console_libraries} /etc/prometheus/
+sudo cp prometheus-2.52.0.linux-amd64/prometheus.yml /etc/prometheus/prometheus.yml
+
+# 6. Tạo user Prometheus
+sudo useradd -M -r -s /bin/false prometheus
+
+# 7. Phân quyền
+sudo chown prometheus:prometheus /usr/local/bin/{prometheus,promtool}
+sudo chown -R prometheus:prometheus /etc/prometheus
+sudo chown prometheus:prometheus /var/lib/prometheus
+
+# 8. Chạy thử
+prometheus --config.file=/etc/prometheus/prometheus.yml
