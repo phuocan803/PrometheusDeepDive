@@ -6,8 +6,7 @@ echo "value_of_pi 3.14" | curl --data-binary @- http://localhost:9091/metrics/jo
 
 curl localhost:9091/metrics
 
-cat << EOF | curl --data-binary @- http://localhost:9091/metrics/job
-/my_job/instance/my_instance
+cat << EOF | curl --data-binary @- http://localhost:9091/metrics/job/my_job/instance/my_instance
 # TYPE temperature gauge
 temperature{location="room1"} 31
 temperature{location="room2"} 33
@@ -23,5 +22,6 @@ curl localhost:9091/metrics
 value_of_pi
 temperature
 my_metric
+
 
 

@@ -1,7 +1,0 @@
-
-#Log in to the Prometheus server.
-#Edit the Alertmanager configuration file:
-sudo nano /etc/alertmanager/alertmanager.yml
-
-
-

@@ -1,0 +1,12 @@
+
+#Log in to the Prometheus server.
+#Edit the Alertmanager configuration file:
+sudo nano /etc/alertmanager/alertmanager.yml
+
+#Set global.resolve_timeout to 10m:
+
+#Restart Alertmanager to load the new configuration
+sudo systemctl restart alertmanager
+
+sudo killall -HUP alertmanager
+

@@ -1,8 +1,10 @@
 
-#Create a user and group for Alertmanager:
-sudo useradd -M -r -s /bin/false alertmanager
+#Log in to the new sever.
+#Create a user and group for Alertmanager
 
-#Download and install the Alertmanager binaries, move the files into the appropriate locations, and set ownership
+sudo useradd -m -r -s /bin/false alertmanager
+
+#Download and install the Alertmanager binaries, move the files into the appropriate locations, and set ownership:
 wget https://github.com/prometheus/alertmanager/releases/download/v0.27.0/alertmanager-0.27.0.linux-amd64.tar.gz
 tar xvfz alertmanager-0.27.0.linux-amd64.tar.gz
 
@@ -31,15 +33,18 @@ sudo nano /etc/systemd/system/alertmanager.service
 Description=Prometheus Alertmanager
 Wants=network-online.target
 After=network-online.target
+
 [Service]
 User=alertmanager
 Group=alertmanager
 Type=simple
-ExecStart=/usr/local/bin/alertmanager \
- --config.file /etc/alertmanager/alertmanager.yml \
- --storage.path /var/lib/alertmanager/
+ExecStart=/usr/local/bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/var/lib/alertmanager --cluster.peer=192.168.60.135:9094
+Restart=on-failure
+
 [Install]
 WantedBy=multi-user.target
+
+
 
 #Start and enable the alertmanager service:
 sudo systemctl enable alertmanager
@@ -54,6 +59,35 @@ curl localhost:9093
 #Verify amtool is able to connect to Alertmanager and retrieve the current configuration
 amtool config show
 
-#Configure Prometheus to Connect to Alertmanager
-#Edit the Prometheus config
 
+#Log in to Alertmanager server (node1)
+#Edit the alertmanager unit file:
+sudo nano /etc/systemd/system/alertmanager.service
+
+#Add a --cluster.peer flag to the Execstart section.
+--cluster.peer=<ip node3>:9094
+
+#Reload and restart the alertmanager service
+sudo systemctl daemon-reload
+sudo systemctl restart alertmanager
+
+#to verify your cluster is working
+sudo systemctl status alertmanager
+
+#config prometheus to connect to both alretmanager instances
+#log in to the prometheus server
+
+sudo nano /etc/prometheus/prometheus.yml
+
+#add the new alertmanager to the list of alertmanager targets
+alerting:
+    alertmanager:
+    - static_configs:
+     - targets: ["localhost:9093","ip node 3:9093"]
+
+#reload and restart prometheus
+sudo systemctl daemon-reload
+sudo systemctl restart prometheus
+
+
+  
