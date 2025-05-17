@@ -77,3 +77,30 @@ scrape_configs:
 
 sudo systemctl enable prometheus
 sudo systemctl start prometheus
+
+#copy all prometheus Configuration form server 1 to server 2
+#Log in to your first Prometheus server.
+#Edit your Prometheus config to change any localhost references that might not work properly on the new server:
+sudo nano /etc/prometheus/prometheus.yml
+
+#Change references to localhost except for the target of the prometheus job to the private IP address of your first Prometheus server.
+#Copy prometheus.yml to Prometheus Server 2:
+scp /etc/prometheus/prometheus.yml
+cloud_user@<PROMETHEUS_SERVER_2_PRIVATE_IP>:/home/cloud_user
+
+#Copy your rules files to Prometheus Server 2:
+scp /etc/prometheus/rules/*
+cloud_user@<PROMETHEUS_SERVER_2_PRIVATE_IP>:/home/cloud_user
+
+#Log in to Prometheus Server 2 and move prometheus.yml to the appropriate location:
+sudo mv ~/prometheus.yml /etc/prometheus/prometheus.yml
+
+#Create the rules directory, and then move the rules file to the appropriate location.
+sudo mkdir -p /etc/prometheus/rules
+sudo mv ~/*.yml /etc/prometheus/rules
+
+#Start the Second Prometheus Instance
+sudo systemctl enable prometheus
+sudo systemctl start prometheus
+
+

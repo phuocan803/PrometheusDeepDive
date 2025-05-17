@@ -4,7 +4,7 @@ sudo nano /etc/prometheus/prometheus.yml
 
 #add a path for rules files to the prometheus config
 rule_files:
-- "/etc/prometheus/rules/*.yml"
+    - "/etc/prometheus/rules/*.yml"
 
 
 #create the rules directory
@@ -15,14 +15,15 @@ sudo nano /etc/prometheus/rules/my-alerts.yml
 
 #Implement an alerting rule to issue an alert when the Linux server goes down
 groups:
-- name: linux-server
- rules:
- - alert: LinuxServerDown
- expr: up{job="Linux Server"} == 0
- labels:
- severity: critical
- annotations:
- summary: Linux Server Down
+  - name: linux-server
+    rules:
+      - alert: LinuxServerDown
+        expr: up{job="Linux Server"} == 0
+        labels:
+          severity: critical
+        annotations:
+          summary: Linux Server Down
+
 
  #Restart Prometheus to reload the configuration
  sudo systemctl restart prometheus
