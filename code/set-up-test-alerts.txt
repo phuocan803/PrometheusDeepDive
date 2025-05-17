@@ -1,9 +1,0 @@
-#Log in to the prometheusr sever
-#create an alerting rules file with some test alertmanagers
-
-sudo nano /etc/prometheus/rules/test-alerts.yml
-
-
-
-
-

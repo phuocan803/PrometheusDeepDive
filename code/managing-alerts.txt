@@ -1,0 +1,51 @@
+#set up test alert
+#Log in to the prometheusr sever
+#create an alerting rules file with some test alertmanagers
+
+sudo nano /etc/prometheus/rules/test-alerts.yml
+
+grouups:
+- name: test-alerts
+    rules:
+    - alert: Server1Down
+    expr: 1
+    labels:
+        severity: critical
+        service: linuxserver
+    annotations:
+        summary: Server 1 Down
+    
+    - alert: Server2Down
+    expr: 1
+    labels:
+        severity: critical
+        service: linuxserver
+    annotations:;
+        summary: Server 2 Down
+    
+    - alert: DownstreamServiceDown
+    expr: 1
+    labels:
+        severity: critical
+    annotations:
+        summary: A downstream service is broken.
+
+#reload and restart the prometheus service
+sudo systemctl daemon-reload prometheus
+sudo systemctl restart prometheus
+
+#set up routing to group similar alerts 
+#edit alertmanager config
+sudo nano /etc/alertmanager/alertmanager.yml
+
+#add a new routing node to group the Server.*Down alerts:
+route:
+
+routes:
+- receiver: 'web.hook'
+  group_by: ['service']
+  match_re:
+    alertname: 'Server.*Down'
+
+#load the new configuration
+sudo killall -HUP alertmanager
