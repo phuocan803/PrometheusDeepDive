@@ -49,3 +49,19 @@ routes:
 
 #load the new configuration
 sudo killall -HUP alertmanager
+
+#set up an inhibition to suppress the DownstreamServiceDown Alertmanager
+#edit alertmanager config
+sudo nano /etc/alertmanager/alertmanager.yml
+
+#add an hibit rule to suppress the DownstreamServiceDown alert when either of the Server.*Down alerts are active:
+inhibit_rules:
+
+- source_match_re:
+    alertname: 'Server.*Down'
+  target_match:
+    alertname: 'DownstreamServiceDown'
+
+#load the new configuration
+sudo killall -HUP alertmanager
+
