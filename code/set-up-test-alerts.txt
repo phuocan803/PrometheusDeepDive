@@ -1,29 +1,9 @@
-#Create a new directory to store rule files:
-sudo mkdir -p /etc/prometheus/rules
+#Log in to the prometheusr sever
+#create an alerting rules file with some test alertmanagers
 
-#Edit the Prometheus configuration:
-sudo nano /etc/prometheus/prometheus.yml
+sudo nano /etc/prometheus/rules/test-alerts.yml
 
-#Locate the rule_files: section and add the rules directory as a new entry:
-    rule_files:
- - "/etc/prometheus/rules/*"
 
-#Create a new rule file:
-sudo nano /etc/prometheus/rules/linux_server_rules.yml
-
-#Implement a rule to calculate and store CPU usage data
-    groups:
-- name: linux_server
- interval: 15s
- rules:
- - record: linux_server:cpu_usage
- expr: sum(rate(node_cpu_seconds_total{job="Linux Server",mode!='idle'}[5m])) * 100 / 2
-
-#Restart Prometheus to load the configuration
-sudo systemctl restart prometheus
-
-#Access the expression browser at localhost:9090/grah
-query: linux_sever:cpu_usage
 
 
 
